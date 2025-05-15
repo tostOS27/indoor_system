@@ -4,6 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from models import Room, RoomCreate, RoomUpdate
 from db_config import ORMBaseModel, db_engine, get_db_session
 from encoders import to_dict
+from fastapi.responses import PlainTextResponse
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -11,11 +12,18 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 ORMBaseModel.metadata.create_all(bind=db_engine)
 app = FastAPI()
 
-@app.get("/")
+@app.get("/", response_class=PlainTextResponse)
 def test():
-    return {"Room database\n"
-           "operations:\n"
-            "    post/rooms\n     get/rooms\n     delete/rooms/room_id\n     put/room/room_id\n" }
+    return (
+        "Room database\n"
+        "operations:\n"
+        "   post/rooms\n"
+        "   get/rooms\n"
+        "   get/rooms/room_id\n"
+        "   delete/rooms/room_id\n"
+        "   put/room/room_id\n"
+        "\n Jan Knyspel"
+    )
 
 @app.post("/rooms")
 def create_room(room_create: RoomCreate, db_session: Session = Depends(get_db_session)):
@@ -44,6 +52,13 @@ def get_all_rooms(db_session: Session = Depends(get_db_session)):
         room_dict = to_dict(room)
         result.append(room_dict)
     return jsonable_encoder(result)
+
+@app.get("/rooms/{room_id}")
+def get_room(room_id: int, db_session: Session = Depends(get_db_session)):
+    room = db_session.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+    return jsonable_encoder(to_dict(room))
 
 @app.delete("/rooms/{room_id}")
 def delete_room(room_id: int, db_session: Session = Depends(get_db_session)):
