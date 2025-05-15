@@ -38,7 +38,7 @@ def create_room(room_create: RoomCreate, db_session: Session = Depends(get_db_se
     db_session.refresh(new_room)
 
     return jsonable_encoder({
-        "id": new_room.room_id,
+        "id": new_room.id,
         "room_number": new_room.room_number,
         "room_category_id": new_room.room_category_id,
         "floor_id": new_room.floor_id,
