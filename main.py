@@ -13,9 +13,9 @@ app = FastAPI()
 
 @app.get("/")
 def test():
-    return {"Room database"
-           "operations:"
-               "post/rooms, get/rooms, delete/rooms/room_id, put/room/room_id" }
+    return {"Room database\n"
+           "operations:\n"
+            "    post/rooms\n     get/rooms\n     delete/rooms/room_id\n     put/room/room_id\n" }
 
 @app.post("/rooms")
 def create_room(room_create: RoomCreate, db_session: Session = Depends(get_db_session)):
