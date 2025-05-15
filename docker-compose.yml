@@ -20,7 +20,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://postgres:12345678@db:5432/indoor_system
+      DATABASE_URL: postgresql://indoor_system_oyep_user:W5bfkCVUHa2BcQV3jMLY0TvvBTkgRZRr@dpg-d0is4kuuk2gs73andn20-a/indoor_system_oyep
 
 volumes:
   postgres_data:
